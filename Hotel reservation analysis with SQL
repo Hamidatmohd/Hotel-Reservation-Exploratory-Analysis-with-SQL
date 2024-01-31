@@ -1,0 +1,140 @@
+---First look at the data we can see that we have 119390 rows and 32 columns
+--- Also we have null values in the agent and company ID columns
+
+---add new column people and total_stay
+alter table [Hotel Reservation Data]
+add No_of_People smallint
+
+update [Hotel Reservation Data]
+set No_of_People = adults + children + babies
+
+select *
+from [Hotel Reservation Data]
+
+---CANCELLATION INSIGHTs
+---what percentage of hotel bookings is cancelled?
+select is_canceled, (count(is_canceled) * 100 / (select count(*) from [Hotel Reservation Data])) as percentage_of_booking_cancelled
+from [Hotel Reservation Data]
+where is_canceled = 0
+group by is_canceled  -- 
+
+---BOOKING PATTERN and BEHAVIOUR analysis
+---what is the distribution of booking across different months and years
+select arrival_date_year, 
+(case 
+	when arrival_date_month = 'January' then '01'
+	when arrival_date_month = 'February' then '02'
+	when arrival_date_month =  'March' then '03'
+	when arrival_date_month = 'April' then '04'
+	when arrival_date_month = 'May' then '05'
+	when arrival_date_month = 'June' then '06'
+	when arrival_date_month = 'July' then '07'
+	when arrival_date_month = 'August' then '08'
+	when arrival_date_month = 'September' then '09'
+	when arrival_date_month = 'October' then '10'
+	when arrival_date_month = 'November' then '11'
+	when arrival_date_month = 'December' then '12'
+	end) as month, count(*) as bookingcount
+from [Hotel Reservation Data]
+group by arrival_date_year,  arrival_date_month
+order by arrival_date_year, month asc
+
+--what percentage of bookings are from repeated guest
+select is_repeated_guest, round((count(is_repeated_guest) * 100.0 / (select count(*) from [Hotel Reservation Data])), 2) as percentage_of_repeated_guest
+from [Hotel Reservation Data]
+group by is_repeated_guest
+
+---top 5 agents in terms of booking
+select top 5 agent, count(*) as top_5_agent
+from [Hotel Reservation Data]
+where agent <> 0
+group by agent
+order by top_5_agent desc
+
+
+---which customer type has most booking
+select customer_type, count(*) as customer_type_with_most_booking
+from [Hotel Reservation Data]
+group by customer_type
+order by customer_type_with_most_booking desc
+
+--month with highest booking
+with RankedMonths as (
+ select
+ hotel, arrival_date_month as booking_month,
+ row_number() over (partition by hotel order by count(*) desc) as row_num
+ from [Hotel Reservation Data]
+ group by hotel, arrival_date_month
+ )
+
+ select hotel, booking_month
+ from RankedMonths
+ where row_num = 1   ---
+
+ ---which hotel has the longer waiting time?(compare the mean of days in waiting list to hotel names)
+select hotel, count(days_in_waiting_list) as average_waiting_time
+from [Hotel Reservation Data]
+where days_in_waiting_list <> 0
+group by hotel --city hotel
+
+---
+
+---GUEST DEMOGRAPHICS
+---what is the avarage number of guest per booking
+select hotel, avg(No_of_People) as avg_numb_of_people_per_booking
+from [Hotel Reservation Data]
+group by hotel
+
+---which of hotel is most preferred by guest
+select hotel, count(*) as number_of_bookings_per_hotel
+from [Hotel Reservation Data]
+group by hotel  --
+
+
+--which country contributes to most guest
+select country, sum(No_of_People) as total_guest_per_country
+from [Hotel Reservation Data]
+group by country
+order by total_guest_per_country desc
+ 
+
+
+---FINANCIAL ANALYSIS
+---which hotel makes the most revenue(compare hotel and adr)
+select hotel, sum(adr) as hotel_with_most_revenue
+from [Hotel Reservation Data]
+group by hotel
+order by hotel_with_most_revenue desc
+
+--what is the reveune across different month? 
+select hotel, arrival_date_month, AVG(adr) as average_revenue
+from [Hotel Reservation Data]
+group by hotel, arrival_date_month
+order by hotel, average_revenue desc
+
+---which distribution channel has the highest adr? 
+select top 1 distribution_channel, AVG(adr) as distribution_channel_with_highest_reveune
+from [Hotel Reservation Data]
+group by distribution_channel
+order by distribution_channel_with_highest_reveune desc
+
+---DEPOSIT ANALYSIS
+---which deposit type is likely to be canceled
+select deposit_type, is_canceled, count(*) as most_preffered_deposit_type
+from [Hotel Reservation Data]
+group by deposit_type, is_canceled
+order by most_preffered_deposit_type desc
+
+
+
+---MEAL ANALYSIS
+---what type of meal is most preferred by guest?
+select meal, count(*) as most_preferred_meal
+from [Hotel Reservation Data]
+group by meal
+order by most_preferred_meal desc 
+
+
+
+ 
+
