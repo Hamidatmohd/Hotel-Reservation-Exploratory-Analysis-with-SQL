@@ -2,7 +2,7 @@
 
 This project explores the booking patterns of hotel customers to gain valuable insights into their behavior when choosing accommodation. These insights can help hotel owners refine their customer strategies and prepare for future trends.
 
-# Data Cleaning
+# Data Cleaning & Transformation
 I used Microsoft Excel for data cleaing. I drooped duplicates, replace the null values in the `conutry` column with 'Others'.
 I use SQL to create a new column called `People` by merging the `Adults`, `Children` and `Babies` column and i also utilize SQL for exploratory analysis on the data.
 
