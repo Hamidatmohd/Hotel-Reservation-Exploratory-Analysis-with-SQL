@@ -1,10 +1,8 @@
-Here's an improved version of your README text for your hotel reservation analysis project on GitHub:
-
-**Overview**
+# Overview
 
 This project explores the booking patterns of hotel customers to gain valuable insights into their behavior when choosing accommodation. These insights can help hotel owners refine their customer strategies and prepare for future trends.
 
-**Key Findings & Recommendations**
+# Key Findings & Recommendations
 
 * **City hotel dominance:** While City hotels receive the most bookings, Resort hotels could attract more guests through targeted discounts and promotions.
 * **Loyalty potential:** 27.52% of cancellations suggest opportunities for customer retention. Both hotels can introduce loyalty programs or discounts for returning guests.
@@ -19,7 +17,7 @@ This project explores the booking patterns of hotel customers to gain valuable i
 * **Seasonal variations:** Peak revenue months differ: May for City hotels and August for Resort hotels. Adjust pricing and promotions accordingly.
 * **Reduce cancellations:** Bookings with no deposit are more likely to be canceled. Consider deposit requirements or flexible cancellation policies.
 
-**Conclusion**
+# Conclusion
 
 To attract new customers and retain existing ones, hotels should:
 
